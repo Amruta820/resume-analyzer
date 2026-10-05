@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analyzer - Results</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            margin: 0;
+            color: #222;
+        }
+
+        .container {
+    width: 94%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+        }
+
+        /* ---------------------------------------
+           HEADER
+        --------------------------------------- */
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        .header p {
+            color: #666;
+            margin-top: 0;
+        }
+
+
+        /* ---------------------------------------
+           SCORE CARDS
+        --------------------------------------- */
+
+        .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+        }
+
+        .score-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .overall-score-card {
+            border-top: 5px solid #6c63ff;
+        }
+
+        .match-card {
+            border-top: 5px solid #28a745;
+        }
+
+        .nlp-card {
+            border-top: 5px solid #007bff;
+        }
+
+        .score-card h2 {
+            font-size: 18px;
+            margin-top: 0;
+        }
+
+        .score {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .score-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .excellent,
+        .good,
+        .moderate,
+        .low {
+            margin: 5px 0;
+        }
+
+
+        /* ---------------------------------------
+           RECOMMENDATION CARD
+        --------------------------------------- */
+
+        .recommendation-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #ff9800;
+        }
+
+        .recommendation-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+
+        /* ---------------------------------------
+           ROLE CARDS
+        --------------------------------------- */
+
+        .role-card {
+            background: #f7f8fc;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            border: 1px solid #e6e8ef;
+        }
+
+        .role-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+        }
+
+        .role-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .role-score {
+            font-size: 19px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .role-description {
+            margin: 8px 0 15px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: #6c63ff;
+            transition: width 0.5s ease;
+        }
+
+
+        /* ---------------------------------------
+           SKILL SECTIONS
+        --------------------------------------- */
+        .skill-analysis {
+    grid-column: 1 / -1;
+    margin-bottom: 20px;
+    border-left: 5px solid #6c63ff;
+}
+
+.skill-analysis h2 {
+    margin-bottom: 25px;
+}
+
+.analysis-item {
+    margin-bottom: 22px;
+}
+
+.analysis-item:last-child {
+    margin-bottom: 0;
+}
+
+.analysis-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.analysis-bar {
+    width: 100%;
+    height: 14px;
+    background: #e2e2e2;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.analysis-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.matching-fill {
+    background: #28a745;
+}
+
+.missing-fill {
+    background: #dc3545;
+}
+
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 20px;
+        }
+
+        .matching {
+            border-left: 5px solid #28a745;
+        }
+
+        .missing {
+            border-left: 5px solid #dc3545;
+        }
+
+        .resume {
+            border-left: 5px solid #007bff;
+        }
+
+        .job {
+            border-left: 5px solid #6f42c1;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 9px 0;
+        }
+
+
+        /* ---------------------------------------
+           SKILL BADGES
+        --------------------------------------- */
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-badge {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            background: #eef0ff;
+        }
+
+        .matching .skill-badge {
+            background: #e7f7ec;
+        }
+
+        .missing .skill-badge {
+            background: #fdebec;
+        }
+
+        .resume .skill-badge {
+            background: #e8f2ff;
+        }
+
+        .job .skill-badge {
+            background: #f1eafd;
+        }
+
+
+        /* ---------------------------------------
+           SKILL RECOMMENDATIONS
+        --------------------------------------- */
+
+        .recommendations {
+            grid-column: 1 / -1;
+            border-left: 5px solid #ff9800;
+        }
+
+        .recommendation-item {
+            background: #f7f8fc;
+            padding: 16px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #e6e8ef;
+        }
+
+        .recommendation-item h3 {
+            margin: 0 0 7px;
+        }
+
+        .recommendation-item p {
+            margin: 0;
+            color: #666;
+            line-height: 1.5;
+        }
+
+
+        /* ---------------------------------------
+           BACK BUTTON
+        --------------------------------------- */
+
+        .back-button {
+            display: block;
+            width: 230px;
+            margin: 35px auto;
+            padding: 14px;
+            text-align: center;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #444;
+        }
+
+
+        /* ---------------------------------------
+           RESPONSIVE DESIGN
+        --------------------------------------- */
+
+        @media (max-width: 800px) {
+
+            .container {
+                width: 94%;
+            }
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .recommendations {
+                grid-column: auto;
+            }
+
+            .role-header {
+                align-items: flex-start;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+        }
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.dashboard-card h3 {
+    margin-top: 0;
+    color: #555;
+}
+
+.dashboard-score {
+    font-size: 38px;
+    font-weight: bold;
+    color: #6c63ff;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+}
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>📊 Resume Analysis Results</h1>
+        <div class="dashboard">
+
+    <div class="dashboard-card">
+        <h3>🎯 Overall Compatibility</h3>
+        <div class="dashboard-score">
+            {{ overall_score }}%
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>✅ Skill Match</h3>
+        <div class="dashboard-score">
+            {{ match_percentage }}%
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>🤖 NLP Similarity</h3>
+        <div class="dashboard-score">
+            {{ similarity_percentage }}%
+        </div>
+    </div>
+
+</div>
+<div class="card" style="margin-bottom: 25px;">
+
+    <h2>📊 Skill Analysis</h2>
+
+    <div style="margin: 20px 0;">
+
+        <p>
+            <strong>Matching Skills:</strong>
+            {{ matching_skills|length }}
+        </p>
+
+        <div style="
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        ">
+            <div style="
+                width: {{ match_percentage }}%;
+                height: 100%;
+                background: #28a745;
+                border-radius: 10px;
+            "></div>
+        </div>
+
+    </div>
+
+
+    <div style="margin: 20px 0;">
+
+        <p>
+            <strong>Missing Skills:</strong>
+            {{ missing_skills|length }}
+        </p>
+
+        <div style="
+            width: 100%;
+            height: 20px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        ">
+            {% if job_skills|length > 0 %}
+
+            <div style="
+                width: {{ (missing_skills|length / job_skills|length * 100) }}%;
+                height: 100%;
+                background: #dc3545;
+                border-radius: 10px;
+            "></div>
+
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+        <p>
+            AI-powered analysis of your resume against the selected job description
+        </p>
+
+    </div>
+
+
+    <!-- SCORE CARDS -->
+
+    <div class="score-grid">
+
+
+        <!-- Overall Score -->
+
+        <div class="score-card overall-score-card">
+
+            <h2>🎯 Overall Compatibility</h2>
+
+            <div class="score">
+                {{ overall_score }}%
+            </div>
+
+
+            {% if overall_score >= 80 %}
+
+                <h3 class="excellent">
+                    🟢 Excellent Match
+                </h3>
+
+                <p>
+                    Your resume is strongly aligned with this job.
+                </p>
+
+
+            {% elif overall_score >= 60 %}
+
+                <h3 class="good">
+                    🟡 Good Match
+                </h3>
+
+                <p>
+                    Your resume has good alignment with this job,
+                    but some areas can be improved.
+                </p>
+
+
+            {% elif overall_score >= 40 %}
+
+                <h3 class="moderate">
+                    🟠 Moderate Match
+                </h3>
+
+                <p>
+                    Your resume has some relevant skills,
+                    but several areas need improvement.
+                </p>
+
+
+            {% else %}
+
+                <h3 class="low">
+                    🔴 Needs Improvement
+                </h3>
+
+                <p>
+                    Your resume has limited alignment with this job.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Resume Match -->
+
+        <div class="score-card match-card">
+
+            <h2>🧩 Skill Match</h2>
+
+            <div class="score">
+                {{ match_percentage }}%
+            </div>
+
+            <p>
+                Percentage of identified job skills
+                that are present in your resume.
+            </p>
+
+        </div>
+
+
+        <!-- NLP Similarity -->
+
+        <div class="score-card nlp-card">
+
+            <h2>🤖 NLP Similarity</h2>
+
+            <div class="score">
+                {{ similarity_percentage }}%
+            </div>
+
+            <p>
+                Semantic similarity calculated using
+                a Sentence Transformer NLP model.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    
+<!-- TOP JOB ROLES -->
+
+<div class="recommendation-card">
+
+    <h2>🎯 Top 3 Recommended Job Roles</h2>
+
+    <p style="color:#666;">
+        These roles are recommended based on your resume skills,
+        job requirements, and semantic NLP similarity.
+    </p>
+
+    {% for role, score in top_roles %}
+
+        <div class="role-card">
+
+            <div class="role-header">
+
+                <div class="role-name">
+
+                    {% if loop.index == 1 %}
+                        🥇
+                    {% elif loop.index == 2 %}
+                        🥈
+                    {% else %}
+                        🥉
+                    {% endif %}
+
+                    {{ role }}
+
+                </div>
+
+                <div class="role-score">
+                    {{ score }}%
+                </div>
+
+            </div>
+
+
+            <p class="role-description">
+
+                {% if role == "Python Developer" %}
+
+                    Develops applications and backend systems
+                    using Python and related technologies.
+
+                {% elif role == "Data Analyst" %}
+
+                    Analyzes data, creates insights, and supports
+                    business decisions using data.
+
+                {% elif role == "Machine Learning Engineer" %}
+
+                    Builds and deploys machine learning models
+                    using data and AI techniques.
+
+                {% elif role == "Web Developer" %}
+
+                    Creates and maintains websites and
+                    web applications.
+
+                {% elif role == "AI Engineer" %}
+
+                    Develops AI-powered applications using
+                    machine learning and deep learning.
+
+                {% endif %}
+
+            </p>
+
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width: {{ score }}%;">
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+    <!-- SKILL ANALYSIS -->
+     <div class="card skill-analysis">
+
+    <h2>📊 Skill Analysis</h2>
+
+    <div class="analysis-item">
+
+        <div class="analysis-label">
+            <span>Matching Skills</span>
+            <strong>{{ matching_skills|length }}</strong>
+        </div>
+
+        <div class="analysis-bar">
+            <div
+                class="analysis-fill matching-fill"
+                style="width: {{ match_percentage }}%;">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="analysis-item">
+
+        <div class="analysis-label">
+            <span>Missing Skills</span>
+            <strong>{{ missing_skills|length }}</strong>
+        </div>
+
+        <div class="analysis-bar">
+            <div
+                class="analysis-fill missing-fill"
+                style="width: {{ 100 - match_percentage }}%;">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="cards">
+
+
+        <!-- MATCHING SKILLS -->
+
+        <div class="card matching">
+
+            <h2>✅ Matching Skills</h2>
+
+            {% if matching_skills %}
+
+                <div class="skill-list">
+
+                    {% for skill in matching_skills %}
+
+                        <span class="skill-badge">
+                            {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p>No matching skills found.</p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- MISSING SKILLS -->
+
+        <div class="card missing">
+
+            <h2>❌ Missing Skills</h2>
+
+            {% if missing_skills %}
+
+                <div class="skill-list">
+
+                    {% for skill in missing_skills %}
+
+                        <span class="skill-badge">
+                            {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p>
+                    No missing skills found! 🎉
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- RESUME SKILLS -->
+
+        <div class="card resume">
+
+            <h2>📄 Resume Skills</h2>
+
+            {% if resume_skills %}
+
+                <div class="skill-list">
+
+                    {% for skill in resume_skills %}
+
+                        <span class="skill-badge">
+                            {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p>
+                    No recognized skills found in your resume.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- JOB REQUIRED SKILLS -->
+
+        <div class="card job">
+
+            <h2>💼 Job Required Skills</h2>
+
+            {% if job_skills %}
+
+                <div class="skill-list">
+
+                    {% for skill in job_skills %}
+
+                        <span class="skill-badge">
+                            {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p>
+                    No recognized skills found in the job description.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- SKILL GAP RECOMMENDATIONS -->
+
+        <div class="card recommendations">
+
+            <h2>💡 Recommended Skills to Learn</h2>
+
+            {% if skill_recommendations %}
+
+                {% for skill, recommendation in skill_recommendations.items() %}
+
+                    <div class="recommendation-item">
+
+                        <h3>
+                            {{ skill }}
+                        </h3>
+
+                        <p>
+                            {{ recommendation }}
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    Great! No additional skills are required
+                    for this job. 🎉
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+
+    <!-- BACK BUTTON -->
+<a href="/download-report" class="back-button">
+    📥 Download PDF Report
+</a>
+    <a href="/" class="back-button">
+        ← Analyze Another Resume
+    </a>
+
+
+</div>
+
+</body>
+
+</html>
