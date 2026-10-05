@@ -75,7 +75,9 @@ python app.py
 ```text
 http://127.0.0.1:5000
 ```
+## 📸 Project Screenshot
 
+![Resume Analyzer Results](resume-analyzer-result.png)
 ## 🎯 Project Goal
 
 The goal of this project is to help students and job seekers understand how well their resume matches a particular job description and identify the skills they should improve before applying.
@@ -85,3 +87,4 @@ The goal of this project is to help students and job seekers understand how well
 **Amruta Kitturmath**
 
 AI-ML Engineering Student
+
